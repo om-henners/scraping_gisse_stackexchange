@@ -10,7 +10,8 @@ import re
 user_details = True #cheat so that the scraper starts
 i = 1
 
-while user_details and i < 2: #want this to time out eventually...
+while user_details and i < 1000: #want this to time out eventually...
+    print "Scraping page {}".format(i)
     url = "http://gis.stackexchange.com/users?page=" + str(i)
     webpage = scraperwiki.scrape(url)
     soup = BeautifulSoup(webpage)
@@ -28,3 +29,4 @@ while user_details and i < 2: #want this to time out eventually...
 
     i += 1
 
+#TODO: Register an account at geonames.org, and look at gelocating place names
