@@ -20,10 +20,10 @@ while user_details and i < 2: #want this to time out eventually...
     for user in user_details:
         temp_name = user.find(name='a', attrs={"href" : re.compile("/users/")})
         data = {}
-        data['name'] = temp_name.string
+        data['name'] = unicode(temp_name.string)
         temp_location = user.find("span", "user-location")
-        data['location'] = temp_location.string
-        print data
+        data['location'] = unicode(temp_location.string)
+        #print data
         scraperwiki.sqlite.save(unique_keys=['name'], data=data)    #saving the data
 
     i += 1
