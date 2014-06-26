@@ -1,0 +1,1 @@
+This scraper grabs the user locations off of profiles from the GIS stackexchange user site. Initiated from this question, http://meta.gis.stackexchange.com/q/544/751
