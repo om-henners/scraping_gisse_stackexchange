@@ -1,6 +1,7 @@
 #this scraper is intended to grab the addresses listed on the stackexchange profile pages,
 #and then map them, taken from question http://meta.gis.stackexchange.com/questions/544/map-of-user-locations
 
+import re
 import os
 import requests
 import functools
@@ -41,11 +42,18 @@ class LimitRequestsPerHour(object):
 def resolve_location(location_name):
     if location_name in {None, "-", "None"}:
         return None, None #Neither longitude or latitude should be returned
+    m = re.match("(-?\d+\.\d+),\s?(-?\d+\.\d+)", location_name)
+    if m:
+        return float(m.group(2)), float(m.group(1))
     print "Resolving location {}".format(location_name)
-    gn = geopy.GeoNames(username=os.environ["MORPH_GEONAMES_USERNAME"])
-    resolved_name, (latitude, longitude) = gn.geocode(location_name)
-    print "Resolved as {}".format(resolved_name)
-    return longitude, latitude
+    try:
+        gn = geopy.GeoNames(username=os.environ["MORPH_GEONAMES_USERNAME"])
+        resolved_name, (latitude, longitude) = gn.geocode(location_name)
+        print "Resolved as {}".format(resolved_name)
+        return longitude, latitude
+    except Exception as e:
+        print "EXCEPTION:", e
+        return None, None
 
 
 def get_gis_se_users():
