@@ -49,7 +49,7 @@ def resolve_location(location_name):
     try:
         gn = geopy.geocoders.GeoNames(username=os.environ["MORPH_GEONAMES_USERNAME"])
         resolved_name, (latitude, longitude) = gn.geocode(location_name)
-        print "Resolved as {}".format(resolved_name)
+        # print "Resolved as {}".format(resolved_name)
         return longitude, latitude
     except TypeError as e:
         print "EXCEPTION:", e
