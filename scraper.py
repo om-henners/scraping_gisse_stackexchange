@@ -93,23 +93,22 @@ def get_gis_se_users():
 def scrape_data():
     conn = sqlite3.connect("data.sqlite")
     conn.execute("""drop table if exists data""")
+    conn.execute("""
+    create table if not exists data (
+    id int primary key on conflict replace,
+    display_name varchar,
+    location varchar,
+    longitude float,
+    latitude float
+    )
+    """)
     conn.commit()
-    with conn:
-
-        conn.execute("""
-        create table if not exists data (
-        id int primary key on conflict replace,
-        display_name varchar,
-        location varchar,
-        longitude float,
-        latitude float
-        )
-        """)
-        conn.commit()
-        conn.executemany(
+    for row in get_gis_se_users():
+        conn.execute(
             """insert into data(id, display_name, location, longitude, latitude) values (?, ?, ?, ?, ?)""",
-            get_gis_se_users()
+            row
         )
+        conn.commit()
 
 
 if __name__ == "__main__":
