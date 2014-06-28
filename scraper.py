@@ -47,11 +47,11 @@ def resolve_location(location_name):
         return float(m.group(2)), float(m.group(1))
     print "Resolving location {}".format(location_name)
     try:
-        gn = geopy.GeoNames(username=os.environ["MORPH_GEONAMES_USERNAME"])
+        gn = geopy.geocoders.GeoNames(username=os.environ["MORPH_GEONAMES_USERNAME"])
         resolved_name, (latitude, longitude) = gn.geocode(location_name)
         print "Resolved as {}".format(resolved_name)
         return longitude, latitude
-    except Exception as e:
+    except TypeError as e:
         print "EXCEPTION:", e
         return None, None
 
@@ -74,10 +74,9 @@ def get_gis_se_users():
         stack_exchange_params["page"] = page
         r = requests.get(stack_exchange_users, params=stack_exchange_params)
         users = r.json()
-
-
+        print "Quota remaining {}".format(users["quota_remaining"])
         for user in users["items"]:
-            print user
+            # print user
             user_id = user["user_id"]
             location_name = user.get("location", None)
             display_name = user["display_name"]
@@ -109,6 +108,7 @@ def scrape_data():
             row
         )
         conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
